@@ -9,6 +9,7 @@ RSpec.configure do |config|
 
   config.before(:each) do
     ItemStore.reset
+    TagStore.reset
   end
 
   def app
