@@ -13,8 +13,6 @@ A minimal Sinatra REST API with full CRUD for a mock `Item` resource. In-memory 
 bundle install
 ```
 
-API key is loaded from `~/.secret` at startup (`PHANTOM_KEY`).
-
 ## Run
 
 ```bash
@@ -31,7 +29,6 @@ bundle exec ruby app.rb   # port 4567
 | POST | /items | Create item |
 | PUT | /items/:id | Update item |
 | DELETE | /items/:id | Delete item |
-| GET | /changes | List recent changes (mock) |
 
 ### Item shape
 
@@ -58,11 +55,8 @@ curl -s -X PUT http://localhost:4567/items/1 \
   -H 'Content-Type: application/json' \
   -d '{"name":"Widget Pro","description":"Upgraded"}'
 
-# Delete
+# Delete (returns 204 No Content)
 curl -s -X DELETE http://localhost:4567/items/1
-
-# List changes
-curl -s http://localhost:4567/changes
 ```
 
 ## Tests
