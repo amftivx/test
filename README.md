@@ -27,6 +27,7 @@ bundle exec ruby app.rb   # port 4567
 | Method | Path | Description |
 |--------|------|-------------|
 | GET | /items | List all items |
+| GET | /items/search?q= | Search items by name or description |
 | GET | /items/:id | Get one item |
 | POST | /items | Create item |
 | PUT | /items/:id | Update item |
@@ -51,6 +52,9 @@ curl -s -X POST http://localhost:4567/items \
 
 # Get one
 curl -s http://localhost:4567/items/1
+
+# Search
+curl -s 'http://localhost:4567/items/search?q=widget'
 
 # Update
 curl -s -X PUT http://localhost:4567/items/1 \

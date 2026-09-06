@@ -18,6 +18,14 @@ module ItemStore
     @items.find { |i| i[:id] == id }
   end
 
+  def self.search(query)
+    needle = query.downcase
+    @items.select do |i|
+      i[:name].to_s.downcase.include?(needle) ||
+        i[:description].to_s.downcase.include?(needle)
+    end
+  end
+
   def self.create(attrs)
     item = { id: @next_id, name: attrs['name'], description: attrs['description'] }
     @next_id += 1
@@ -45,6 +53,12 @@ before { content_type :json }
 
 get '/items' do
   ItemStore.all.to_json
+end
+
+get '/items/search' do
+  query = params['q'].to_s
+  halt 400, { error: 'q is required' }.to_json if query.empty?
+  ItemStore.search(query).to_json
 end
 
 get '/items/:id' do

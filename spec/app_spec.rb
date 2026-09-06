@@ -38,6 +38,45 @@ RSpec.describe 'Items API' do
     end
   end
 
+  describe 'GET /items/search' do
+    before do
+      post '/items', { name: 'Widget', description: 'A fine widget' }.to_json, headers
+      post '/items', { name: 'Gadget', description: 'A widget-adjacent gadget' }.to_json, headers
+      post '/items', { name: 'Doohickey', description: 'Unrelated' }.to_json, headers
+    end
+
+    it 'matches on name' do
+      get '/items/search?q=doohickey'
+      expect(last_response.status).to eq(200)
+      body = JSON.parse(last_response.body)
+      expect(body.map { |i| i['name'] }).to eq(['Doohickey'])
+    end
+
+    it 'matches on description and is case-insensitive' do
+      get '/items/search?q=WIDGET'
+      body = JSON.parse(last_response.body)
+      expect(body.map { |i| i['name'] }).to contain_exactly('Widget', 'Gadget')
+    end
+
+    it 'returns an empty array when nothing matches' do
+      get '/items/search?q=nope'
+      expect(last_response.status).to eq(200)
+      expect(JSON.parse(last_response.body)).to eq([])
+    end
+
+    it 'returns 400 when q is missing or blank' do
+      get '/items/search'
+      expect(last_response.status).to eq(400)
+      expect(JSON.parse(last_response.body)['error']).to eq('q is required')
+    end
+
+    it 'does not shadow GET /items/:id' do
+      get '/items/1'
+      expect(last_response.status).to eq(200)
+      expect(JSON.parse(last_response.body)['name']).to eq('Widget')
+    end
+  end
+
   describe 'POST /items' do
     it 'returns 201 with the created item including an id' do
       post '/items', { name: 'Widget', description: 'A fine widget' }.to_json, headers
