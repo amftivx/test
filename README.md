@@ -13,8 +13,6 @@ A minimal Sinatra REST API with full CRUD for a mock `Item` resource. In-memory 
 bundle install
 ```
 
-API key is loaded from `~/.secret` at startup (`PHANTOM_KEY`).
-
 ## Run
 
 ```bash
@@ -61,7 +59,7 @@ curl -s -X PUT http://localhost:4567/items/1 \
   -H 'Content-Type: application/json' \
   -d '{"name":"Widget Pro","description":"Upgraded"}'
 
-# Delete
+# Delete (returns 204 No Content)
 curl -s -X DELETE http://localhost:4567/items/1
 ```
 
